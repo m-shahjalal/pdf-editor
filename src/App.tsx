@@ -19,7 +19,8 @@ const customStyles = {
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
     width: '70%',
-    height: '80%'
+    height: '80%',
+    borderRadius: '4px',
   },
 };
 
@@ -27,6 +28,17 @@ export default function App() {
   const [pdfs, setPDFs] = useState<string[]>([]);
   const [active, setActive] = useState('');
   const [isOpen, setIsOpen] = useState(false)
+  const [file, setFile] = useState<File | null>(null)
+  const [text, setText] = useState('')
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.name, e.target.files?.[0])
+    const file = e.target.files?.[0]
+
+    if(!file?.type.includes('image/')) return;
+
+    setFile(file)
+  }
 
   const handleActive = (blob: any) => {
     setActive(blob)
@@ -78,8 +90,18 @@ export default function App() {
         onRequestClose={() => setIsOpen(false)}
         style={customStyles}
       >
-        <EditModal handleClose={() => setIsOpen(false)} data={active} />
+        <EditModal handleClose={() => setIsOpen(false)} data={active} image={file} text={text} />
       </Modal>
+
+      {
+        active && isOpen && (<div className="fixed top-0 left-0 right-0 justify-center items-center flex z-50">
+          <div className="flex justify-center items-center gap-2 bg-green-400 p-4 rounded-b-lg">
+            <input onChange={handleInput} type="file" name="file" id="file" className="hidden" />
+            <label htmlFor="file" className="btn-primary">Choose file</label>
+            <button className="btn-primary">Text</button>
+          </div>
+        </div>)
+      }
     </div>
   )
 }

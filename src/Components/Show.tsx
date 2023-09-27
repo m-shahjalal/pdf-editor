@@ -7,7 +7,7 @@ interface PDFListProps {
 
 const PDFViewer = ({ data, handleActive }: PDFListProps) => {
 	const [pdfURL, setPdfURL] = useState('');
-	const [blob, setBlob] = useState<Blob | null>(null);
+	const [blob, setBlob] = useState<string | null>(null);
 
 	useEffect(() => {
 		const base64 = data.split(',')[1];
@@ -17,7 +17,7 @@ const PDFViewer = ({ data, handleActive }: PDFListProps) => {
 			type: 'application/pdf',
 		});
 
-		setBlob(pdfBlob);
+		setBlob(pdfData);
 		const pdfURL = URL.createObjectURL(pdfBlob);
 
 		setPdfURL(pdfURL);
